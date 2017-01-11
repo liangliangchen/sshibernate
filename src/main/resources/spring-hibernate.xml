@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"   
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+						http://www.springframework.org/schema/context   
+    					http://www.springframework.org/schema/context/spring-context-3.0.xsd   
+						http://www.springframework.org/schema/tx   
+						http://www.springframework.org/schema/tx/spring-tx-3.0.xsd  
+						http://www.springframework.org/schema/aop   
+						http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+	<!-- <context:property-placeholder location="classpath:db.properties"/> -->
+	<!-- 配置数据源 -->  
+    <bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">  
+        <property name="driverClassName" value="${driverClassName}" />
+        <property name="url" value="${url}" />  
+        <property name="username" value="${username}" />  
+        <property name="password" value="${password}" />
+        <!-- 初始化连接数量 type:int -->  
+        <property name="initialSize" value="${initialSize}" />  
+        <!-- 最大并发数量 type:int -->  
+        <property name="maxActive" value="${maxActive}" />  
+        <!-- 最大空闲数量 type:int -->  
+        <property name="maxIdle" value="${maxIdle}" />  
+        <!-- 最小空闲数量 type:int -->  
+        <property name="minIdle" value="${minIdle}" />  
+        <!-- 配置获取连接等待超时的时间,单位：毫秒 type:long -->  
+        <property name="maxWait" value="${maxWait}" />
+    </bean>
+    
+    <!-- 配置SessionFactory -->  
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"> 
+        <!-- 注入数据源 -->  
+        <property name="dataSource" ref="dataSource" />
+        <!-- 指定自动扫描的注解实体类包 -->  
+        <property name="packagesToScan" value="me.demo.sshibernate.model" />  
+        <!-- 配置其他属性 -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.formate_sql">${hibernate.formate_sql}</prop>
+				<prop key="hibernate.hbm2ddl">${hibernate.hbm2ddl}</prop>
+			</props>
+		</property> 
+    </bean>
+    
+    <!-- 配置一个事务管理器 -->  
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">  
+        <property name="sessionFactory" ref="sessionFactory"/>  
+    </bean>
+    
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!-- 拦截的是下段配置aop里设置的路径，即txPointcut中配置的路径 -->
+            <!-- 具体的propagation含义请自查 -->
+            <tx:method name="add*" propagation="REQUIRED" />
+            <tx:method name="delete*" propagation="REQUIRED" />
+            <tx:method name="update*" propagation="REQUIRED" />
+            <tx:method name="*" read-only="true" />
+        </tx:attributes>
+    </tx:advice>
+    <aop:config expose-proxy="true">
+        <!-- 只对业务逻辑层（service层）实施事务 -->
+        <aop:pointcut id="txPointcut"
+            expression="execution(* me.demo.ssibernate.service.impl.*(..))" />
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut" />
+    </aop:config>
+    
+    
+</beans>
