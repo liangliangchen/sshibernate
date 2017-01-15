@@ -2,12 +2,12 @@ package me.demo.sshibernate.dao;
 
 import java.util.List;
 
-import me.demo.sshibernate.model.User;
+import me.demo.sshibernate.model.Users;
 
 public interface UserDao {
 	
-	public List<User> getAllUser();
+	public List<Users> getAllUser();
 	
-	public void addUser(User user);
+	public void addUser(Users user);
 
 }

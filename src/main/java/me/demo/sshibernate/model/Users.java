@@ -1,5 +1,6 @@
 package me.demo.sshibernate.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -7,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="user")
-public class User {
+@Table(name="users")
+public class Users {
 	
 	private Integer id;
 	
@@ -16,6 +17,7 @@ public class User {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="id")
 	public Integer getId() {
 		return id;
 	}
@@ -23,7 +25,7 @@ public class User {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
+	@Column(name="name")
 	public String getName() {
 		return name;
 	}

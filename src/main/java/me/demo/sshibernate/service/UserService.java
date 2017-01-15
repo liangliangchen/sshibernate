@@ -1,9 +1,9 @@
 package me.demo.sshibernate.service;
 
-import me.demo.sshibernate.model.User;
+import me.demo.sshibernate.model.Users;
 
 public interface UserService {
 	
-	public void addUser(User user);
+	public void addUser(Users user);
 
 }

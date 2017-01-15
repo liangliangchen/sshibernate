@@ -2,7 +2,7 @@ package me.demo.sshibernate.action;
 
 import javax.servlet.http.HttpServletRequest;
 
-import me.demo.sshibernate.model.User;
+import me.demo.sshibernate.model.Users;
 import me.demo.sshibernate.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ public class UserAction {
 	private UserService userService;
 	
 	@RequestMapping("/user/addUser.action")
-	public String addUser(User user, HttpServletRequest request) {
+	public String addUser(Users user, HttpServletRequest request) {
 		userService.addUser(user);
 		return "redirect:/user/index.action";
 	}
